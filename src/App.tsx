@@ -1,51 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { Button, Label, Input } from '../';
+import "./App.css";
+import { ConfirmationModal } from "./ConfirmationModal";
+import { InlineModalProvider, useInlineModal } from "../lib/context";
 
-function App() {
-  const [count, setCount] = useState(0)
-  const [inputCustomCountValue, setInputCustomCountValue] = useState('');
+function InnerApp() {
+  const modal = useInlineModal();
 
-  const handleClickCustomCount = () => {
-    if (inputCustomCountValue === '') {
-      setCount(count => count + 1);
-    } else {
-      setCount(Number(inputCustomCountValue));
-    }
-  }
+  const handleClick = async () => {
+    const confirmation = await modal.show(ConfirmationModal);
+
+    if (!confirmation) return;
+
+    alert("Proceeding...");
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <Label>My Label</Label><br />
-        <Input
-          placeholder="Custom count"
-          value={inputCustomCountValue}
-          onChange={(e) => setInputCustomCountValue(e.target.value)}
-        /><br />
-        <Button onClick={handleClickCustomCount}>
-          count is {count}
-        </Button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <button onClick={handleClick}>Start Flow</button>
     </>
-  )
+  );
 }
 
-export default App
+const App = () => {
+  return (
+    <InlineModalProvider>
+      <InnerApp />
+    </InlineModalProvider>
+  );
+};
+
+export default App;
