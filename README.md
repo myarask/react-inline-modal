@@ -1,10 +1,10 @@
 # Write natural flowing code with inline modals
 
-Replace visibility states with flows that match the user's experience:
+Use modals in flows to match the user's experience.
 
 ```ts
 const handleClick = async () => {
-  // Allow modals to collect user input asynchronously
+  // Collect user input asynchronously
   // (Confirmation Modal is a React component)
   const confirmation = await modal.show(ConfirmationModal);
 
@@ -24,7 +24,7 @@ npm i react-inline-modal
 
 ## Usage
 
-1. Introduce the `InlineModalProvider` to your application.
+### Introduce the `InlineModalProvider` to your application
 
 ```tsx
 import { InlineModalProvider } from "react-inline-modal";
@@ -38,10 +38,11 @@ const App = () => {
 };
 ```
 
-2. Prepare your specialty modal
+### Prepare your specialty modal
 
 ```tsx
-import { Modal } from "my-component-library";
+// Bring your own stylized modal
+import { Modal } from "any-component-library";
 
 const ConfirmationModal = ({ resolve }) => {
   return (
@@ -54,7 +55,7 @@ const ConfirmationModal = ({ resolve }) => {
 };
 ```
 
-3. Use the inline modals in a user flow
+### Use the inline modals in a user flow
 
 ```tsx
 import { useInlineModal } from "react-inline-modal";
@@ -69,6 +70,6 @@ const DangerButton = () => {
     alert("Proceeding...");
   };
 
-  return <button onClick={handleClick}>Do</button>;
+  return <button onClick={handleClick}>Do Something Permanent</button>;
 };
 ```

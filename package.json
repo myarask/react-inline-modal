@@ -1,8 +1,20 @@
 {
-  "name": "@myarask/react-inline-modal",
+  "name": "react-inline-modal",
+  "description": "Use modals in flows to match the user's experience",
+  "keywords": [
+    "react",
+    "modal",
+    "inline",
+    "DX",
+    "developer experience"
+  ],
   "author": "Mark Yaraskavitch",
   "private": false,
-  "version": "1.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "version": "1.0.1",
   "type": "module",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
