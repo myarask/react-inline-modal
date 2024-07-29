@@ -24,7 +24,7 @@ npm i react-inline-modal
 
 ## Usage
 
-### Introduce the `InlineModalProvider` to your application
+Introduce the `InlineModalProvider` to your application:
 
 ```tsx
 import { InlineModalProvider } from "react-inline-modal";
@@ -38,7 +38,7 @@ const App = () => {
 };
 ```
 
-### Prepare your specialty modal
+Prepare your specialty modal:
 
 ```tsx
 // Bring your own stylized modal
@@ -55,7 +55,7 @@ const ConfirmationModal = ({ resolve }) => {
 };
 ```
 
-### Use the inline modals in a user flow
+Use the inline modals in a user flow:
 
 ```tsx
 import { useInlineModal } from "react-inline-modal";
