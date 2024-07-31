@@ -1,16 +1,18 @@
 import { createContext, useCallback, useContext, useState } from "react";
 
 type ResolveType = (value: unknown) => void;
-type ComponentType = React.ComponentType<{ resolve: ResolveType }>;
 
-type Modal = {
-  Component: ComponentType;
+interface Modal<P> {
+  Component: React.ComponentType<P & { resolve: ResolveType }>;
   resolve: ResolveType;
-};
+  props?: P | undefined;
+}
 
 const InlineModalContext = createContext<{
-  //   hide: () => void;
-  show: (Component: ComponentType) => Promise<unknown>;
+  show<P>(
+    component: React.ComponentType<P & { resolve: ResolveType }>,
+    props?: P | undefined
+  ): Promise<unknown>;
 }>(null!);
 
 /**
@@ -21,21 +23,26 @@ export const InlineModalProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [modals, setModals] = useState<Modal[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [modals, setModals] = useState<Modal<any>[]>([]);
 
   const hide = useCallback(() => {
     setModals((prev) => prev.slice(0, -1));
   }, [setModals]);
 
   const show = useCallback(
-    (Component: ComponentType) => {
+    <P,>(
+      Component: React.ComponentType<P & { resolve: ResolveType }>,
+      props?: P | undefined
+    ) => {
       return new Promise((resolve) => {
-        const newModal = {
+        const newModal: Modal<P> = {
           Component,
           resolve: (result: unknown) => {
             resolve(result);
             hide();
           },
+          props,
         };
 
         setModals((prev) => [...prev, newModal]);
@@ -47,8 +54,8 @@ export const InlineModalProvider = ({
   return (
     <InlineModalContext.Provider value={{ show }}>
       {children}
-      {modals.map(({ Component, resolve }, index) => (
-        <Component key={index} resolve={resolve} />
+      {modals.map(({ Component, resolve, props }, index) => (
+        <Component {...props} key={index} resolve={resolve} />
       ))}
     </InlineModalContext.Provider>
   );

@@ -1,12 +1,14 @@
 import "./App.css";
 import { ConfirmationModal } from "./ConfirmationModal";
-import { InlineModalProvider, useInlineModal } from "../lib/context";
+import { InlineModalProvider, useInlineModal } from "../lib/index";
 
 function InnerApp() {
   const modal = useInlineModal();
 
   const handleClick = async () => {
-    const confirmation = await modal.show(ConfirmationModal);
+    const confirmation = await modal.show(ConfirmationModal, {
+      message: "Are you sure?",
+    });
 
     if (!confirmation) return;
 

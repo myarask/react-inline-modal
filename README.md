@@ -6,7 +6,10 @@ Use modals in flows to match the user's experience.
 const handleClick = async () => {
   // Collect user input asynchronously
   // (Confirmation Modal is a React component)
-  const confirmation = await modal.show(ConfirmationModal);
+  const confirmation = await modal.show(ConfirmationModal, {
+    // Pass props to the modal
+    message: "Are you sure?",
+  });
 
   // Handle logical branches
   if (!confirmation) return;
@@ -44,10 +47,10 @@ Prepare your specialty modal:
 // Bring your own stylized modal
 import { Modal } from "any-component-library";
 
-const ConfirmationModal = ({ resolve }) => {
+const ConfirmationModal = ({ resolve, message }) => {
   return (
     <Modal open>
-      <h1>Are you sure?</h1>
+      <h1>{message}</h1>
       <button onClick={() => resolve(true)}>Yes</button>
       <button onClick={() => resolve(false)}>No</button>
     </Modal>
@@ -64,7 +67,10 @@ const DangerButton = () => {
   const modal = useInlineModal();
 
   const handleClick = async () => {
-    const confirmation = await modal.show(ConfirmationModal);
+    const confirmation = await modal.show(ConfirmationModal, {
+      message: "Are you sure?",
+    });
+
     if (!confirmation) return;
 
     alert("Proceeding...");
