@@ -1,18 +1,28 @@
 import { createContext, useCallback, useContext, useState } from "react";
 
-type ResolveType = (value: unknown) => void;
+type Resolve = (value: unknown) => void;
+type ComponentWithResolveProps<P> = P & { resolve: Resolve };
 
 interface Modal<P> {
-  Component: React.ComponentType<P & { resolve: ResolveType }>;
-  resolve: ResolveType;
-  props?: P | undefined;
+  Component: React.ComponentType<P & { resolve: Resolve }>;
+  resolve: Resolve;
+  props: Omit<ComponentWithResolveProps<P>, "resolve"> | undefined;
 }
 
-const InlineModalContext = createContext<{
-  show<P>(
-    component: React.ComponentType<P & { resolve: ResolveType }>,
-    props?: P | undefined
+// Utility type to check if a component uses a prop other than "resolve"
+type UsesNoProps<T> = keyof T extends "resolve" ? true : false;
+
+type Show = {
+  <P extends object>(
+    Component: React.ComponentType<ComponentWithResolveProps<P>>,
+    props?: UsesNoProps<P> extends true
+      ? never
+      : Omit<ComponentWithResolveProps<P>, "resolve">
   ): Promise<unknown>;
+};
+
+const InlineModalContext = createContext<{
+  show: Show;
 }>(null!);
 
 /**
@@ -31,14 +41,16 @@ export const InlineModalProvider = ({
   }, [setModals]);
 
   const show = useCallback(
-    <P,>(
-      Component: React.ComponentType<P & { resolve: ResolveType }>,
-      props?: P | undefined
+    <P extends object>(
+      Component: React.ComponentType<ComponentWithResolveProps<P>>,
+      props?: UsesNoProps<P> extends true
+        ? undefined
+        : Omit<ComponentWithResolveProps<P>, "resolve">
     ) => {
       return new Promise((resolve) => {
         const newModal: Modal<P> = {
           Component,
-          resolve: (result: unknown) => {
+          resolve: (result) => {
             resolve(result);
             hide();
           },

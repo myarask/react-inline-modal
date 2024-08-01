@@ -5,7 +5,7 @@ Use modals in flows to match the user's experience.
 ```ts
 const handleClick = async () => {
   // Collect user input asynchronously
-  // (Confirmation Modal is a React component)
+  // (ConfirmationModal is a React component)
   const confirmation = await modal.show(ConfirmationModal, {
     // Pass props to the modal
     message: "Are you sure?",
