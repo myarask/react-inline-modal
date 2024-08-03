@@ -1,6 +1,6 @@
-# Write natural flowing code with inline modals
+# React Inline Modal
 
-Use modals in flows to match the user's experience.
+Use React modals directly in your handlers to align with the user's experience.
 
 ```ts
 const handleClick = async () => {

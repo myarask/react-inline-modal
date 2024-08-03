@@ -9,17 +9,26 @@ interface Modal<P> {
   props: Omit<ComponentWithResolveProps<P>, "resolve"> | undefined;
 }
 
-// Utility type to check if a component uses a prop other than "resolve"
-type UsesNoProps<T> = keyof T extends "resolve" ? true : false;
+type FirstArgument<T> = T extends (arg1: infer A, ...args: unknown[]) => unknown
+  ? A
+  : never;
 
-type Show = {
-  <P extends object>(
-    Component: React.ComponentType<ComponentWithResolveProps<P>>,
-    props?: UsesNoProps<P> extends true
+type ShowReturnType<C> = Promise<
+  C extends React.ComponentType<infer P>
+    ? P extends { resolve: unknown }
+      ? FirstArgument<P["resolve"]>
+      : void
+    : void
+>;
+
+type Show = <C extends React.ComponentType<any>>(
+  Component: C,
+  props?: C extends React.ComponentType<infer P>
+    ? keyof P extends "resolve"
       ? never
-      : Omit<ComponentWithResolveProps<P>, "resolve">
-  ): Promise<unknown>;
-};
+      : Omit<P, "resolve">
+    : undefined
+) => ShowReturnType<C>;
 
 const InlineModalContext = createContext<{
   show: Show;
@@ -33,7 +42,6 @@ export const InlineModalProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [modals, setModals] = useState<Modal<any>[]>([]);
 
   const hide = useCallback(() => {
@@ -43,7 +51,7 @@ export const InlineModalProvider = ({
   const show = useCallback(
     <P extends object>(
       Component: React.ComponentType<ComponentWithResolveProps<P>>,
-      props?: UsesNoProps<P> extends true
+      props?: keyof P extends "resolve"
         ? undefined
         : Omit<ComponentWithResolveProps<P>, "resolve">
     ) => {
@@ -64,7 +72,7 @@ export const InlineModalProvider = ({
   );
 
   return (
-    <InlineModalContext.Provider value={{ show }}>
+    <InlineModalContext.Provider value={{ show: show as Show }}>
       {children}
       {modals.map(({ Component, resolve, props }, index) => (
         <Component {...props} key={index} resolve={resolve} />
