@@ -19,15 +19,9 @@ const handleClick = async () => {
 };
 ```
 
-## Installation
+## Quick Start
 
-```bash
-npm i react-inline-modal
-```
-
-## Usage
-
-Introduce the `InlineModalProvider` to your application:
+Add the `InlineModalProvider` to your app:
 
 ```tsx
 import { InlineModalProvider } from "react-inline-modal";
@@ -41,7 +35,7 @@ const App = () => {
 };
 ```
 
-Prepare your specialty modal:
+Prepare your modal:
 
 ```tsx
 // Bring your own stylized modal
@@ -49,7 +43,7 @@ import { Modal } from "any-component-library";
 
 const ConfirmationModal = ({ resolve, message }) => {
   return (
-    <Modal open>
+    <Modal open onClose={() = resolve(false)}>
       <h1>{message}</h1>
       <button onClick={() => resolve(true)}>Yes</button>
       <button onClick={() => resolve(false)}>No</button>
@@ -58,12 +52,10 @@ const ConfirmationModal = ({ resolve, message }) => {
 };
 ```
 
-Use the inline modals in a user flow:
+Use the modal in a handler:
 
 ```tsx
-import { useInlineModal } from "react-inline-modal";
-
-const DangerButton = () => {
+const DeleteButton = () => {
   const modal = useInlineModal();
 
   const handleClick = async () => {
@@ -76,6 +68,6 @@ const DangerButton = () => {
     alert("Proceeding...");
   };
 
-  return <button onClick={handleClick}>Do Something Permanent</button>;
+  return <button onClick={handleClick}>Delete</button>;
 };
 ```
